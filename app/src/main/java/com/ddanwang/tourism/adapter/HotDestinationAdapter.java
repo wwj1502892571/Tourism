@@ -1,0 +1,82 @@
+package com.ddanwang.tourism.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.ddanwang.tourism.R;
+import com.ddanwang.tourism.db.DestinationVo;
+import com.ddanwang.tourism.util.ImageUtil;
+
+import java.util.List;
+
+/**
+ * Created by WeiWenjun
+ * 2016/3/24
+ * 17:23
+ * HotDestinationAdapter
+ */
+public class HotDestinationAdapter extends BaseAdapter{
+    private LayoutInflater inflater;
+    private Context mContext;
+    private List<DestinationVo> mDestList;
+
+    public void setmDestList(List<DestinationVo> mDestList) {
+        this.mDestList = mDestList;
+    }
+
+    public HotDestinationAdapter(Context context){
+        this.mContext = context;
+        inflater = LayoutInflater.from(mContext);
+    }
+
+    @Override
+    public int getCount() {
+        if(mDestList.size()>0 && mDestList.size()<=4){
+            return mDestList.size();
+        }else if(mDestList.size()>4){
+            return 4;
+        }
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mDestList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        DestinationVo vo = mDestList.get(position);
+        ViewHolder viewHolder = null;
+        if (convertView == null) {
+            inflater = LayoutInflater.from(parent.getContext());
+            convertView = inflater.inflate(R.layout.grid_hot_dest_item, null);
+            viewHolder = new ViewHolder();
+            viewHolder.cityBg = (ImageView) convertView.findViewById(R.id.city_bg);
+            viewHolder.cityName = (TextView) convertView.findViewById(R.id.city_name);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        ImageUtil.loadPic(vo.getDestPic(), viewHolder.cityBg, mContext);
+        viewHolder.cityName.setText(vo.getDestName());
+        return convertView;
+    }
+
+    public static class ViewHolder{
+        ImageView cityBg;
+        TextView cityName;
+    }
+
+}
